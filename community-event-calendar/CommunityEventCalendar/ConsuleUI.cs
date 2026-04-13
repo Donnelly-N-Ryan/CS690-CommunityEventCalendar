@@ -39,11 +39,11 @@ public class ConsoleUI {
                     }
 
                     else if (command == "update event") {
-                        Event selectedEvent;
+                        Event? selectedEvent = null;
                         do {
                             if (dataManager.Events.Count == 0) {
                                 Console.WriteLine("No events available.");
-                                continue;
+                                break;
                             }
 
                             var choices = new List<Event>(dataManager.Events);
@@ -64,7 +64,7 @@ public class ConsoleUI {
                             selectedEvent.Description = AnsiConsole.Prompt(new TextPrompt<string>("Enter new description:").DefaultValue(selectedEvent.Description));
                             dataManager.UpdateEvent(selectedEvent);
                             Console.WriteLine($"Event '{selectedEvent.Name}' updated!");
-                        } while (selectedEvent.Name != "end");
+                        } while (selectedEvent != null && selectedEvent.Name != "end");
                     }
 
                     else if (command == "delete event") {
@@ -99,7 +99,7 @@ public class ConsoleUI {
                                     new SelectionPrompt<string>()
                                         .Title("What do you want to do?")
                                         .AddChoices(new[] {
-                                            "view events","register for event", "unregister for event", "end"
+                                            "view events", "end" //add "register for event", "unregister for event",
                                         }));
 
                     if (command == "view events") {
@@ -120,13 +120,13 @@ public class ConsoleUI {
                         }
                     }
 
-                    else if (command == "register for event") {
-                        Console.WriteLine("Feature not implemented yet. check back later");
-                    }
+                    //else if (command == "register for event") {
+                      //  Console.WriteLine("Feature not implemented yet. check back later");
+                    //}
 
-                    else if (command == "unregister for event") {
-                        Console.WriteLine("Feature not implemented yet. check back later");
-                    }
+                    //else if (command == "unregister for event") {
+                      //  Console.WriteLine("Feature not implemented yet. check back later");
+                   // }
 
                 } while (command != "end");
             }
