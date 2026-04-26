@@ -59,22 +59,22 @@ public class DataManager {
         SaveMembers();
     }
 
-    public void DeleteMember(CommunityMember m) {
-        Members.Remove(m);
-        if (File.Exists($"{m.Name}.txt")) {
-            File.Delete($"{m.Name}.txt");
+    public void DeleteMember(CommunityMember member) {
+        Members.Remove(member);
+        if (File.Exists($"{member.Name}.txt")) {
+            File.Delete($"{member.Name}.txt");
         }
         SaveMembers();
     }
 
     public void SaveMembers() {
-        var memberNames = Members.Select(m => m.Name).ToArray();
+        var memberNames = Members.Select(member => member.Name).ToArray();
         File.WriteAllLines("members.txt", memberNames);
     }
 
-    public void SaveMemberRegistrations(CommunityMember m) {
-        var eventIds = m.RegisteredEvents.Select(e => e.id.ToString()).ToArray();
-        File.WriteAllLines($"{m.Name}.txt", eventIds);
+    public void SaveMemberRegistrations(CommunityMember member) {
+        var eventIds = member.RegisteredEvents.Select(e => e.id.ToString()).ToArray();
+        File.WriteAllLines($"{member.Name}.txt", eventIds);
     }
     
     public void LoadData() {

@@ -1,2 +1,4 @@
 <Solution>
+  <Project Path="CommunityEventCalendar.Tests/CommunityEventCalendar.Tests.csproj" />
+  <Project Path="CommunityEventCalendar/CommunityEventCalendar.csproj" />
 </Solution>

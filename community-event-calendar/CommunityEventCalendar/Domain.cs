@@ -42,4 +42,16 @@ public class CommunityMember{
         this.RegisteredEvents = new List<Event>();
     }
 
+    public override string ToString() {
+        return this.Name;
+    }
+
+    public void AddRegisteredEvent(Event @event) {
+        this.RegisteredEvents.Add(@event);
+    }
+
+    public void RemoveRegisteredEvent(Event @event) {
+        this.RegisteredEvents.Remove(@event);
+    }
+
 }
