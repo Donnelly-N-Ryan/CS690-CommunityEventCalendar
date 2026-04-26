@@ -24,7 +24,7 @@ public class ConsoleUI {
                                         new SelectionPrompt<string>()
                                             .Title("What do you want to do?")
                                             .AddChoices(new[] {
-                                                "add event","update event","delete event", "end"
+                                                "add event","update event","delete event", "manage members", "end"
                                             }));
 
                     if (command == "add event") {
@@ -88,10 +88,53 @@ public class ConsoleUI {
                         }
                     }
 
+                    else if (command == "manage members") {
+                        var memberCommand = AnsiConsole.Prompt(
+                            new SelectionPrompt<string>()
+                                .Title("What do you want to do?")
+                                .AddChoices(new[] {
+                                    "add member", "delete member", "end"
+                                }));
+
+                        if (memberCommand == "add member") {
+                            var name = AnsiConsole.Prompt(new TextPrompt<string>("Enter member name:"));
+                            dataManager.AddMember(name);
+                            Console.WriteLine($"Member '{name}' added!");
+                        }
+
+                        else if (memberCommand == "delete member") {
+                            if (dataManager.Members.Count == 0) {
+                                Console.WriteLine("No members available.");
+                            } else {
+                                var selectedMember = AnsiConsole.Prompt(
+                                    new SelectionPrompt<CommunityMember>()
+                                        .Title("Select a member to delete")
+                                        .AddChoices(dataManager.Members));
+
+                                if (AnsiConsole.Confirm($"Are you sure you want to delete '{selectedMember.Name}'?")) {
+                                    dataManager.DeleteMember(selectedMember);
+                                    Console.WriteLine($"Member '{selectedMember.Name}' deleted!");
+                                } else {
+                                    Console.WriteLine("Deletion cancelled.");
+                                }
+                            }
+                        }
+                    }
+
                 } while (command != "end");
             }
 
             else if (mode == "community member") {
+                if (dataManager.Members.Count == 0) {
+                    Console.WriteLine("No community members exist. Ask a manager to create your account.");
+                    continue;
+                }
+
+                var selectedMember = AnsiConsole.Prompt(
+                    new SelectionPrompt<CommunityMember>()
+                        .Title("Who are you?")
+                        .AddChoices(dataManager.Members));
+               
                 string command;
                 do {
 
@@ -99,7 +142,7 @@ public class ConsoleUI {
                                     new SelectionPrompt<string>()
                                         .Title("What do you want to do?")
                                         .AddChoices(new[] {
-                                            "view events", "end" //add "register for event", "unregister for event",
+                                            "view events","register for event","unregister for event", "end"
                                         }));
 
                     if (command == "view events") {
@@ -120,13 +163,38 @@ public class ConsoleUI {
                         }
                     }
 
-                    //else if (command == "register for event") {
-                      //  Console.WriteLine("Feature not implemented yet. check back later");
-                    //}
+                    else if (command == "register for event") {
+                        if (dataManager.Events.Count == 0) {
+                            Console.WriteLine("No events available.");
+                            continue;
+                        }
 
-                    //else if (command == "unregister for event") {
-                      //  Console.WriteLine("Feature not implemented yet. check back later");
-                   // }
+                        var selectedEvent = AnsiConsole.Prompt(
+                            new SelectionPrompt<Event>()
+                                .Title("Select an event to register for")
+                                .AddChoices(dataManager.Events));
+
+                        if (selectedMember.RegisteredEvents.Contains(selectedEvent)) {
+                            Console.WriteLine($"You are already registered for '{selectedEvent.Name}'.");
+                        } else {
+                            dataManager.RegisterForEvent(selectedMember, selectedEvent);
+                            Console.WriteLine($"You are now registered for '{selectedEvent.Name}'!");
+                        }
+                    }
+
+                    else if (command == "unregister for event") {
+                        if (selectedMember.RegisteredEvents.Count == 0) {
+                            Console.WriteLine("You are not registered for any events.");
+                            continue;
+                        }
+
+                        var selectedEvent = AnsiConsole.Prompt(
+                            new SelectionPrompt<Event>()
+                                .Title("Select an event to unregister from")
+                                .AddChoices(selectedMember.RegisteredEvents));
+
+                            dataManager.UnregisterForEvent(selectedMember, selectedEvent);
+                            Console.WriteLine($"You have been unregistered from '{selectedEvent.Name}'.");}
 
                 } while (command != "end");
             }
