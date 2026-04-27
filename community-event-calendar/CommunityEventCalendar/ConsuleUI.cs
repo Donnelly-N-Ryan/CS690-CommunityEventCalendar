@@ -142,10 +142,10 @@ public class ConsoleUI {
                                     new SelectionPrompt<string>()
                                         .Title("What do you want to do?")
                                         .AddChoices(new[] {
-                                            "view events","register for event","unregister for event", "end"
+                                            "view all events", "view registrations", "register for event","unregister for event", "end"
                                         }));
 
-                    if (command == "view events") {
+                    if (command == "view all events") {
                         if (dataManager.Events.Count == 0) {
                             Console.WriteLine("Sorry, there are no events in your area.");
                         } else {
@@ -156,13 +156,33 @@ public class ConsoleUI {
                             table.AddColumn("Description");
 
                             foreach (var e in dataManager.Events) {
-                                table.AddRow(e.Name, e.Location, e.Date, e.Description);
+                                var displayName = e.IsUpdated ? $"{e.Name} (UPDATED)" : e.Name;
+                                if (selectedMember.RegisteredEvents.Contains(e)) {
+                                    displayName += " (REGISTERED)";
+                                }
+                                table.AddRow(displayName, e.Location, e.Date, e.Description);
                             }
 
                             AnsiConsole.Write(table);
                         }
                     }
-
+                    else if (command == "view registrations"){
+                        if (selectedMember.RegisteredEvents.Count == 0) {
+                            Console.WriteLine("You are not registered for any events.");
+                            continue;
+                        } else {
+                            var table = new Table();
+                            table.AddColumn("Name");
+                            table.AddColumn("Location");
+                            table.AddColumn("Date");
+                            table.AddColumn("Description");
+                            foreach (var e in selectedMember.RegisteredEvents) {
+                                var displayName = e.IsUpdated ? $"{e.Name} (UPDATED)" : e.Name;
+                                table.AddRow(displayName, e.Location, e.Date, e.Description);
+                            }
+                            AnsiConsole.Write(table);
+                        }
+                    }
                     else if (command == "register for event") {
                         if (dataManager.Events.Count == 0) {
                             Console.WriteLine("No events available.");
