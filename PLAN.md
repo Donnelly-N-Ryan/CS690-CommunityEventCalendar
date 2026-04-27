@@ -26,3 +26,6 @@ dotnet publish to publish
 ## Iteration 3
 - [ ] FR7 Updated events will display a message stating they were updated
 - [ ] FR4  Community Members can see updated details for the events they are signed up for
+- [ ] FR6 Upcoming events display a message if the user is already signed up. 
+
+Need to add user documentation for viewing all events and for viewing just registered for events
